@@ -10,6 +10,21 @@ import HTTP
 import Foundation
 
 final class UserController: ResourceRepresentable {
+    /// 操作に対応したクロージャを引数にResourceを生成
+    func makeResource() -> Resource<UserModel> {
+        return Resource(
+            index: index,
+            store: store,
+            show: show,
+            update: update,
+            replace: replace,
+            destroy: delete,
+            clear: clear
+        )
+    }
+}
+
+extension UserController {
     /// /usersに対してのGET
     func index(_ req: Request) throws -> ResponseRepresentable {
         return try UserModel.all().makeJSON()
@@ -57,21 +72,8 @@ final class UserController: ResourceRepresentable {
         try user.save()
         return user
     }
-    
-    /// 操作に対応したクロージャを引数にResourceを生成
-    func makeResource() -> Resource<UserModel> {
-        return Resource(
-            index: index,
-            store: store,
-            show: show,
-            update: update,
-            replace: replace,
-            destroy: delete,
-            clear: clear
-        )
-    }
-
 }
+
 extension Request {
     func user() throws -> UserModel {
         guard let json = json else { throw Abort.badRequest }

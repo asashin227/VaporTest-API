@@ -77,6 +77,7 @@ extension UserModel: JSONConvertible {
     }
 }
 
+// モデル更新時の処理
 extension UserModel: Updateable {
     public static var updateableKeys: [UpdateableKey<UserModel>] {
         return [
