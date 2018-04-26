@@ -40,39 +40,25 @@ final class UserController: ResourceRepresentable {
         return Response(status: .ok)
     }
     
-    /// When the user calls 'PATCH' on a specific resource, we should
-    /// update that resource to the new values.
+    /// '/users/[id]'に対してのPATCH
     func update(_ req: Request, user: UserModel) throws -> ResponseRepresentable {
-        // See `extension Post: Updateable`
         try user.update(for: req)
         
-        // Save an return the updated post.
         try user.save()
         return user
     }
     
-    /// When a user calls 'PUT' on a specific resource, we should replace any
-    /// values that do not exist in the request with null.
-    /// This is equivalent to creating a new Post with the same ID.
+    /// '/users/[id]'に対してのPUT
     func replace(_ req: Request, user: UserModel) throws -> ResponseRepresentable {
-        // First attempt to create a new Post from the supplied JSON.
-        // If any required fields are missing, this request will be denied.
         let new = try req.user()
         
-        // Update the post with all of the properties from
-        // the new post
         user.name = new.name
         user.age = new.age
         try user.save()
-        
-        // Return the updated post
         return user
     }
     
-    /// When making a controller, it is pretty flexible in that it
-    /// only expects closures, this is useful for advanced scenarios, but
-    /// most of the time, it should look almost identical to this
-    /// implementation
+    /// 操作に対応したクロージャを引数にResourceを生成
     func makeResource() -> Resource<UserModel> {
         return Resource(
             index: index,
